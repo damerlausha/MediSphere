@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>
+        Healthcare Resources
+    </h1>
+
+    {% for resource in resources %}
+
+        <div class="card">
+
+            <h3>
+                {{ resource.name }}
+            </h3>
+
+            <p>
+                Category:
+                {{ resource.get_category_display }}
+            </p>
+
+            <p>
+                {{ resource.description }}
+            </p>
+
+        </div>
+
+    {% empty %}
+
+        <p>
+            No resources available.
+        </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
