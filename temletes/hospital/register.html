@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <h2>
+        Hospital Registration
+    </h2>
+
+    <p>
+        Your hospital account will remain
+        <strong>Pending</strong> until verification.
+    </p>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label>
+            Hospital Name
+        </label>
+
+        <input
+            type="text"
+            name="hospital_name"
+            required
+        >
+
+
+        <label>
+            Registration Number
+        </label>
+
+        <input
+            type="text"
+            name="registration_number"
+            required
+        >
+
+
+        <label>
+            Hospital Type
+        </label>
+
+        <input
+            type="text"
+            name="hospital_type"
+            placeholder="Government / Private / Clinic"
+        >
+
+
+        <label>
+            Address
+        </label>
+
+        <textarea
+            name="address"
+            required
+        ></textarea>
+
+
+        <label>
+            City
+        </label>
+
+        <input
+            type="text"
+            name="city"
+            required
+        >
+
+
+        <label>
+            State
+        </label>
+
+        <input
+            type="text"
+            name="state"
+            required
+        >
+
+
+        <label>
+            PIN Code
+        </label>
+
+        <input
+            type="text"
+            name="pincode"
+            required
+        >
+
+
+        <label>
+            Phone
+        </label>
+
+        <input
+            type="text"
+            name="phone"
+            required
+        >
+
+
+        <label>
+            Official Email
+        </label>
+
+        <input
+            type="email"
+            name="email"
+            required
+        >
+
+
+        <label>
+            Website
+        </label>
+
+        <input
+            type="url"
+            name="website"
+        >
+
+
+        <label>
+            Authorized Person
+        </label>
+
+        <input
+            type="text"
+            name="authorized_person"
+        >
+
+
+        <input
+            type="hidden"
+            name="latitude"
+            id="hospital-latitude"
+        >
+
+        <input
+            type="hidden"
+            name="longitude"
+            id="hospital-longitude"
+        >
+
+
+        <div class="location-box">
+
+            <strong>
+                Hospital Location
+            </strong>
+
+            <p id="hospital-location-status">
+                Detecting location...
+            </p>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="button"
+        >
+            Submit Hospital Registration
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

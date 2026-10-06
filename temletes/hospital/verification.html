@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>
+        Hospital Verification
+    </h1>
+
+    <div class="verification-card">
+
+        <h2>
+            {{ hospital.hospital_name }}
+        </h2>
+
+        <p>
+            Registration Number:
+            {{ hospital.registration_number }}
+        </p>
+
+        <p>
+            Current Status:
+            <strong>
+                {{ hospital.get_verification_status_display }}
+            </strong>
+        </p>
+
+        {% if hospital.verification_status == "PENDING" %}
+
+            <p>
+                Your hospital registration has been
+                submitted and is waiting for verification.
+            </p>
+
+        {% elif hospital.verification_status == "UNDER_REVIEW" %}
+
+            <p>
+                Your hospital information is currently
+                under review by the administrator.
+            </p>
+
+        {% elif hospital.verification_status == "REJECTED" %}
+
+            <p>
+                Your hospital registration was rejected.
+                Please contact the administrator.
+            </p>
+
+        {% elif hospital.verification_status == "BLOCKED" %}
+
+            <p>
+                This hospital account has been blocked.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

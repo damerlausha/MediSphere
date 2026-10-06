@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>
+        Hospital Dashboard
+    </h1>
+
+    <h2>
+        {{ hospital.hospital_name }}
+    </h2>
+
+    <p>
+        Verification:
+        <strong>
+            Verified
+        </strong>
+    </p>
+
+
+    <div class="dashboard-grid">
+
+        <div class="card">
+
+            <h3>
+                Search Resources
+            </h3>
+
+            <p>
+                Find resources available at nearby
+                hospitals.
+            </p>
+
+            <a
+                href="{% url 'search_resource' %}"
+                class="button"
+            >
+                Search
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Resource Availability
+            </h3>
+
+            <p>
+                Manage resources available at
+                your hospital.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Resource Requests
+            </h3>
+
+            <p>
+                View hospital-to-hospital requests.
+            </p>
+
+            <a
+                href="{% url 'request_list' %}"
+                class="button"
+            >
+                Requests
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Notifications
+            </h3>
+
+            <a
+                href="{% url 'notification_list' %}"
+                class="button"
+            >
+                View Notifications
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
