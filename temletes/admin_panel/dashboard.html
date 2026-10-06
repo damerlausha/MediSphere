@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>
+        Admin Dashboard
+    </h1>
+
+    <p>
+        Manage and verify healthcare facilities
+        and healthcare resources.
+    </p>
+
+
+    <div class="dashboard-grid">
+
+        <div class="card">
+
+            <h3>
+                Hospital Verification
+            </h3>
+
+            <p>
+                Review hospital registrations
+                and verification status.
+            </p>
+
+            <a
+                href="/admin/"
+                class="button"
+            >
+                Open Admin
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Resources
+            </h3>
+
+            <p>
+                Manage healthcare resources.
+            </p>
+
+            <a
+                href="/admin/"
+                class="button"
+            >
+                Manage Resources
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Integrations
+            </h3>
+
+            <a
+                href="{% url 'integration_home' %}"
+                class="button"
+            >
+                Integrations
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
