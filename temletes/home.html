@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+    HealthConnect
+{% endblock %}
+
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Find Healthcare Resources Near You
+        </h1>
+
+        <p>
+            Quickly find nearby verified hospitals
+            that have the healthcare resources you need.
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a
+                href="{% url 'search' %}"
+                class="button"
+            >
+                Find Resources
+            </a>
+
+
+            <a
+                href="{% url 'hospital_register' %}"
+                class="button secondary"
+            >
+                Register Hospital
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="features">
+
+    <div class="feature-card">
+
+        <h3>
+            Nearby Hospitals
+        </h3>
+
+        <p>
+            Find verified hospitals near your current location.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <h3>
+            Multiple Resources
+        </h3>
+
+        <p>
+            Search for blood, medicines, beds, oxygen,
+            equipment and other healthcare resources.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <h3>
+            Verified Facilities
+        </h3>
+
+        <p>
+            Search results are provided from verified
+            healthcare facilities.
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

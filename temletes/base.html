@@ -1,0 +1,149 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+            HealthConnect
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header>
+
+        <div class="navbar">
+
+            <!-- LOGO -->
+
+            <a
+                href="{% url 'home' %}"
+                class="logo"
+            >
+                HealthConnect
+            </a>
+
+
+            <!-- NAVIGATION -->
+
+            <nav>
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+
+                <a href="{% url 'search' %}">
+                    Search
+                </a>
+
+
+                {% if user.is_authenticated %}
+
+                    {% if user.role == "HOSPITAL" %}
+
+                        <a href="{% url 'hospital_dashboard' %}">
+                            Hospital Dashboard
+                        </a>
+
+                    {% elif user.role == "ADMIN" %}
+
+                        <a href="{% url 'admin_dashboard' %}">
+                            Admin Dashboard
+                        </a>
+
+                    {% else %}
+
+                        <a href="{% url 'search' %}">
+                            Find Resources
+                        </a>
+
+                    {% endif %}
+
+
+                    <a href="{% url 'logout' %}">
+                        Logout
+                    </a>
+
+
+                {% else %}
+
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main>
+
+        {% if messages %}
+
+            <div class="messages">
+
+                {% for message in messages %}
+
+                    <div class="message">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            © 2026 HealthConnect.
+            Connecting patients with available healthcare resources.
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>
