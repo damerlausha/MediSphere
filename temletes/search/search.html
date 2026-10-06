@@ -1,0 +1,763 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Find Healthcare Resources
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+    .search-page {
+        --search-blue: #0b6efd;
+        --search-ink: #222;
+        --search-muted: #222;
+        --search-border: #ccc;
+        --search-pale: #eaf4ff;
+        --search-white: #fff;
+        width: min(1120px, 90%);
+        margin: 0 auto;
+        padding: 44px 0 72px;
+        color: var(--search-ink);
+    }
+
+    .search-intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+        gap: clamp(24px, 5vw, 64px);
+        align-items: stretch;
+        margin: 0 0 30px;
+    }
+
+    .search-intro-copy {
+        align-self: center;
+        padding: 8px 0 10px 20px;
+        border-left: 5px solid var(--search-blue);
+    }
+
+    .search-eyebrow {
+        margin: 0 0 10px;
+        color: var(--search-blue);
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .search-intro h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 2.65rem);
+        line-height: 1.14;
+        letter-spacing: -0.035em;
+    }
+
+    .search-intro .subtitle {
+        max-width: 620px;
+        margin: 14px 0 0;
+        color: var(--search-muted);
+        font-size: 1.05rem;
+        line-height: 1.65;
+    }
+
+    .search-location-note {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 22px 24px;
+        background: var(--search-pale);
+        border: 1px solid var(--search-border);
+        border-top: 4px solid var(--search-blue);
+        border-radius: 5px;
+    }
+
+    .search-location-note h2 {
+        margin: 0 0 8px;
+        font-size: 1.05rem;
+        line-height: 1.4;
+    }
+
+    .search-location-note p {
+        margin: 0;
+        font-size: 0.94rem;
+        line-height: 1.6;
+    }
+
+    .search-panel {
+        padding: clamp(22px, 4vw, 38px);
+        background: var(--search-white);
+        border: 1px solid var(--search-border);
+        border-top: 4px solid var(--search-blue);
+        border-radius: 8px;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .search-panel-heading {
+        margin: 0 0 6px;
+        font-size: 1.25rem;
+        line-height: 1.35;
+    }
+
+    .search-panel-hint {
+        margin: 0 0 24px;
+        color: var(--search-muted);
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
+
+    #resourceSearchForm {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px 26px;
+    }
+
+    .search-page .form-group {
+        min-width: 0;
+    }
+
+    .search-page .form-group label,
+    .search-page .field-label {
+        display: block;
+        margin: 0 0 8px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .search-page .step-number {
+        display: inline-grid;
+        width: 24px;
+        height: 24px;
+        margin-right: 6px;
+        place-items: center;
+        color: var(--search-blue);
+        border: 1px solid var(--search-blue);
+        border-radius: 50%;
+        font-size: 0.78rem;
+        line-height: 1;
+        vertical-align: -1px;
+    }
+
+    .search-page select,
+    .search-page input[type="number"] {
+        width: 100%;
+        min-height: 50px;
+        margin: 0;
+        padding: 11px 13px;
+        color: var(--search-ink);
+        background: var(--search-white);
+        border: 1px solid var(--search-border);
+        border-radius: 5px;
+        font: inherit;
+    }
+
+    .search-page select:focus-visible,
+    .search-page input[type="number"]:focus-visible,
+    .search-page #searchButton:focus-visible {
+        outline: 3px solid var(--search-blue);
+        outline-offset: 3px;
+    }
+
+    .search-page .field-help {
+        margin: 7px 0 0;
+        color: var(--search-muted);
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+
+    .search-page .location-group {
+        padding: 17px 19px;
+        background: var(--search-pale);
+        border-left: 4px solid var(--search-blue);
+        border-radius: 4px;
+    }
+
+    .search-page .location-group .field-label {
+        margin-bottom: 4px;
+    }
+
+    .search-page #locationStatus {
+        margin: 0;
+        font-size: 0.93rem;
+        line-height: 1.5;
+    }
+
+    .search-page #searchButton {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+        min-height: 52px;
+        margin: 0;
+        padding: 13px 22px;
+        color: var(--search-white);
+        background: var(--search-blue);
+        border: 1px solid var(--search-blue);
+        border-radius: 4px;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+        transition: box-shadow 150ms ease, transform 150ms ease;
+    }
+
+    .search-page #searchButton:hover {
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.16);
+        transform: translateY(-1px);
+    }
+
+    .search-page #searchButton:active {
+        transform: translateY(0);
+    }
+
+    .results-section {
+        margin-top: 42px;
+    }
+
+    .results-heading {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px 18px;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--search-border);
+    }
+
+    .results-heading h2 {
+        margin: 0;
+        font-size: clamp(1.35rem, 2.5vw, 1.7rem);
+        line-height: 1.3;
+    }
+
+    .results-count {
+        margin: 0;
+        color: var(--search-muted);
+        font-size: 0.9rem;
+    }
+
+    .results-note {
+        margin: -5px 0 16px;
+        color: var(--search-muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .hospital-result {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 16px 24px;
+        margin: 0 0 14px;
+        padding: 22px 24px;
+        background: var(--search-white);
+        border: 1px solid var(--search-border);
+        border-left: 4px solid var(--search-blue);
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.045);
+    }
+
+    .hospital-result h3 {
+        margin: 0 0 12px;
+        font-size: 1.2rem;
+        line-height: 1.35;
+    }
+
+    .result-details {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 24px;
+        margin: 0;
+    }
+
+    .result-details div {
+        min-width: 0;
+    }
+
+    .result-details dt {
+        margin: 0 0 3px;
+        color: var(--search-muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .result-details dd {
+        margin: 0;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    .result-details .result-primary dd {
+        font-weight: 700;
+    }
+
+    .result-details a {
+        color: var(--search-blue);
+    }
+
+    .result-details a:focus-visible {
+        outline: 3px solid var(--search-blue);
+        outline-offset: 2px;
+    }
+
+    .verification-label {
+        align-self: start;
+        padding: 6px 10px;
+        color: var(--search-blue);
+        background: var(--search-pale);
+        border: 1px solid var(--search-blue);
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .no-results,
+    .search-prompt {
+        margin-top: 32px;
+        padding: 24px 26px;
+        background: var(--search-white);
+        border: 1px solid var(--search-border);
+        border-left: 4px solid var(--search-blue);
+        border-radius: 5px;
+    }
+
+    .no-results h2,
+    .search-prompt h2 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+    }
+
+    .no-results p,
+    .search-prompt p {
+        margin: 0;
+        color: var(--search-muted);
+        line-height: 1.6;
+    }
+
+    @media (max-width: 760px) {
+        .search-page {
+            width: min(100% - 32px, 540px);
+            padding: 32px 0 48px;
+        }
+
+        .search-intro {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .search-intro-copy {
+            padding-left: 16px;
+        }
+
+        .search-location-note {
+            padding: 18px 20px;
+        }
+
+        .search-panel {
+            padding: 22px 18px;
+        }
+
+        #resourceSearchForm,
+        .result-details {
+            grid-template-columns: 1fr;
+        }
+
+        .search-page #searchButton {
+            width: 100%;
+        }
+
+        .results-section {
+            margin-top: 34px;
+        }
+
+        .hospital-result {
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 19px 17px;
+        }
+
+        .verification-label {
+            justify-self: start;
+            grid-row: 1;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .search-page #searchButton {
+            transition: none;
+            transform: none;
+        }
+    }
+</style>
+
+<div class="search-page">
+    <header class="search-intro">
+        <div class="search-intro-copy">
+            <p class="search-eyebrow">Healthcare resource finder</p>
+            <h1>Find the care resources you need</h1>
+            <p class="subtitle">
+                Find verified hospitals with the supplies you need. Tell us what to look for
+                and how much, and we’ll show nearby matches first.
+            </p>
+        </div>
+        <aside class="search-location-note" aria-labelledby="location-note-heading">
+            <h2 id="location-note-heading">Location access is required</h2>
+            <p>
+                Allow access to match available resources to nearby hospitals and sort by distance.
+                If you deny access, nearby availability matches won’t appear. Update your browser
+                location permission and search again.
+            </p>
+        </aside>
+    </header>
+
+    <section class="search-panel" aria-labelledby="search-panel-heading">
+        <h2 class="search-panel-heading" id="search-panel-heading">Build your search</h2>
+        <p class="search-panel-hint">
+            Choose a resource and quantity, then allow location access to find nearby matches.
+        </p>
+
+        <form method="POST" id="resourceSearchForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="resource_type"><span class="step-number" aria-hidden="true">1</span>Resource category</label>
+                <select id="resource_type" name="resource_type" aria-describedby="resource-type-help" required>
+                    <option value="">Select a resource type</option>
+                    {% for value, label in resource_type_choices %}
+                        <option
+                            value="{{ value }}"
+                            {% if selected_resource_type == value %}selected{% endif %}
+                        >
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <p class="field-help" id="resource-type-help">Choose the category that best matches what you need.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="resource"><span class="step-number" aria-hidden="true">2</span>Specific resource</label>
+                <select id="resource" name="resource" aria-describedby="resource-help" required>
+                    <option value="">Select a resource type first</option>
+                    {% for resource in resources %}
+                        <option
+                            value="{{ resource.id }}"
+                            data-type="{{ resource.resource_type }}"
+                            {% if selected_resource %}
+                                {% if selected_resource.id == resource.id %}selected{% endif %}
+                            {% endif %}
+                        >
+                            {{ resource.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <p class="field-help" id="resource-help">Options are filtered to the category you selected.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity"><span class="step-number" aria-hidden="true">3</span>Quantity needed</label>
+                <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="1"
+                    value="{{ requested_quantity }}"
+                    aria-describedby="quantity-help"
+                    required
+                >
+                <p class="field-help" id="quantity-help">We’ll look for hospitals with at least this amount available.</p>
+            </div>
+
+            <div class="form-group location-group" aria-labelledby="location-label">
+                <p class="field-label" id="location-label"><span class="step-number" aria-hidden="true">4</span>Your location</p>
+                <p class="field-help" id="locationStatus" role="status" aria-live="polite" aria-atomic="true">
+                    Checking your location…
+                </p>
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
+            </div>
+
+            <button type="submit" id="searchButton">Find nearby hospitals</button>
+        </form>
+    </section>
+
+    {% if selected_resource %}
+        <section class="results-section" aria-labelledby="request-results-heading" aria-live="polite">
+            <div class="results-heading">
+                <h2 id="request-results-heading">Hospitals requesting {{ selected_resource.name }}</h2>
+                <p class="results-count">
+                    {{ request_results|length }} request{{ request_results|length|pluralize }}
+                </p>
+            </div>
+
+            {% for request_item in request_results %}
+                <article class="hospital-result">
+                    <div>
+                        <h3>{{ request_item.requesting_hospital.hospital_name }}</h3>
+                        <dl class="result-details">
+                            <div class="result-primary">
+                                <dt>Wants:</dt>
+                                <dd>{{ request_item.quantity }} {{ request_item.resource.unit }}</dd>
+                            </div>
+                            <div class="result-primary">
+                                <dt>Priority</dt>
+                                <dd>{{ request_item.get_priority_display }}</dd>
+                            </div>
+                            <div>
+                                <dt>Location</dt>
+                                <dd>{{ request_item.requesting_hospital.address }}, {{ request_item.requesting_hospital.city }}, {{ request_item.requesting_hospital.state }}</dd>
+                            </div>
+                            <div>
+                                <dt>Phone</dt>
+                                <dd><a href="tel:{{ request_item.requesting_hospital.phone }}">{{ request_item.requesting_hospital.phone }}</a></dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <span class="verification-label">Verified hospital</span>
+                </article>
+            {% empty %}
+                <p class="results-note">No verified hospitals are currently requesting this resource.</p>
+            {% endfor %}
+        </section>
+    {% endif %}
+
+    {% if results %}
+        <section class="results-section" aria-labelledby="results-heading" aria-live="polite">
+            <div class="results-heading">
+                <h2 id="results-heading">Hospitals with {{ selected_resource.name }}</h2>
+                <p class="results-count">
+                    {{ results|length }} matching location{{ results|length|pluralize }}
+                </p>
+            </div>
+        <p class="results-note">
+            Showing verified hospitals with at least {{ requested_quantity }} {{ selected_resource.unit }} available.
+        </p>
+
+        {% for item in results %}
+            <article class="hospital-result">
+                <div>
+                    <h3>{{ item.hospital.hospital_name }}</h3>
+                    <dl class="result-details">
+                        <div class="result-primary">
+                            <dt>Resource</dt>
+                            <dd>{{ item.resource.name }}</dd>
+                        </div>
+                        <div class="result-primary">
+                            <dt>Available quantity</dt>
+                            <dd>{{ item.quantity }} {{ item.resource.unit }}</dd>
+                        </div>
+                        <div>
+                            <dt>Location</dt>
+                            <dd>{{ item.hospital.address }}, {{ item.hospital.city }}, {{ item.hospital.state }}</dd>
+                        </div>
+                            <div>
+                                <dt>Phone</dt>
+                                <dd><a href="tel:{{ item.hospital.phone }}">{{ item.hospital.phone }}</a></dd>
+                            </div>
+                            <div>
+                                <dt>Distance</dt>
+                                <dd>
+                                    {% if item.distance is not None %}
+                                        {{ item.distance|floatformat:2 }} km
+                                    {% else %}
+                                        Distance not available
+                                    {% endif %}
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <span class="verification-label">Verified hospital</span>
+                </article>
+            {% endfor %}
+        </section>
+    {% elif selected_resource %}
+        <section class="no-results" aria-labelledby="no-results-heading" role="status">
+            <h2 id="no-results-heading">No nearby hospitals found</h2>
+            <p>
+                We couldn’t find a verified hospital with {{ selected_resource.name }} in the requested quantity nearby.
+                Make sure location permission is enabled, or try a smaller quantity or a different resource.
+            </p>
+        </section>
+    {% else %}
+        <section class="search-prompt" aria-labelledby="search-prompt-heading">
+            <h2 id="search-prompt-heading">Start with what you need</h2>
+            <p>
+                Choose a resource category and item above to see matching verified hospitals
+                and their availability.
+            </p>
+        </section>
+    {% endif %}
+</div>
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const resourceType =
+            document.getElementById(
+                "resource_type"
+            );
+
+
+        const resource =
+            document.getElementById(
+                "resource"
+            );
+
+
+        const locationStatus =
+            document.getElementById(
+                "locationStatus"
+            );
+
+
+        const latitude =
+            document.getElementById(
+                "latitude"
+            );
+
+
+        const longitude =
+            document.getElementById(
+                "longitude"
+            );
+
+
+        const selectedResourceId =
+            "{{ selected_resource.id|default:'' }}";
+
+
+        function filterResources() {
+
+            const selectedType =
+                resourceType.value;
+
+
+            const options =
+                resource.querySelectorAll(
+                    "option"
+                );
+
+
+            let selectedStillExists = false;
+
+
+            options.forEach(
+                function (option) {
+
+                    if (option.value === "") {
+
+                        return;
+
+                    }
+
+
+                    const optionType =
+                        option.getAttribute(
+                            "data-type"
+                        );
+
+
+                    if (
+                        selectedType !== ""
+                        &&
+                        optionType === selectedType
+                    ) {
+
+                        option.hidden = false;
+
+
+                        if (
+                            option.value ===
+                            selectedResourceId
+                        ) {
+
+                            selectedStillExists =
+                                true;
+                        }
+
+                    } else {
+
+                        option.hidden = true;
+
+                    }
+
+                }
+            );
+
+
+            if (
+                !selectedStillExists
+                &&
+                selectedType !== ""
+            ) {
+
+                resource.value = "";
+
+            }
+
+        }
+
+
+        resourceType.addEventListener(
+            "change",
+            function () {
+
+                resource.value = "";
+
+                filterResources();
+
+            }
+        );
+
+
+        filterResources();
+
+
+        // GET USER LOCATION
+
+        if (
+            navigator.geolocation
+        ) {
+
+            navigator.geolocation.getCurrentPosition(
+
+                function (position) {
+
+                    latitude.value =
+                        position.coords.latitude;
+
+                    longitude.value =
+                        position.coords.longitude;
+
+
+                    locationStatus.textContent =
+                        "Location detected successfully.";
+
+                },
+
+
+                function () {
+
+                    locationStatus.textContent =
+                        "Location access is required for nearby availability matches and distance sorting. Allow access, then search again.";
+
+                }
+
+            );
+
+        } else {
+
+            locationStatus.textContent =
+                "This browser does not support location access, so nearby availability matches cannot be shown or sorted by distance.";
+
+        }
+
+    }
+);
+
+</script>
+
+
+{% endblock %}
