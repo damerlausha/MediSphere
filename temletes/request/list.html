@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>
+        Resource Requests
+    </h1>
+
+
+    {% for request_item in requests %}
+
+        <div class="card">
+
+            <h3>
+                Request #{{ request_item.id }}
+            </h3>
+
+            <p>
+                Resource:
+                {{ request_item.resource.name }}
+            </p>
+
+            <p>
+                Quantity:
+                {{ request_item.quantity }}
+            </p>
+
+            <p>
+                From:
+                {{ request_item.requesting_hospital.hospital_name }}
+            </p>
+
+            <p>
+                To:
+                {{ request_item.providing_hospital.hospital_name }}
+            </p>
+
+            <p>
+                Priority:
+                {{ request_item.priority }}
+            </p>
+
+            <p>
+                Status:
+                {{ request_item.status }}
+            </p>
+
+        </div>
+
+    {% empty %}
+
+        <p>
+            No resource requests.
+        </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
